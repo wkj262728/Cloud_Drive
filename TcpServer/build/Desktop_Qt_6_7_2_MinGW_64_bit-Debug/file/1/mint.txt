@@ -1,0 +1,90 @@
+template<int mod> struct mint{
+	unsigned int x = 0;
+	mint inv()const{return pow(mod-2);}
+	mint pow(long long t)const{
+		assert(t >= 0);
+		mint res = 1, cur = x;
+		for(; t; t>>=1)
+		{
+			if(t & 1) res *= cur;
+			cur *= cur;
+		}
+		return res;
+	}
+	mint() = default;
+	mint(unsigned int t): x(t){}
+	mint(int t){t%=mod; if(t < 0) t+= mod; x = t;}
+	mint(long long t){t%=mod; if(t < 0) t+= mod; x = t;}
+	
+	mint& operator+= (const mint& t){x += t.x; if(x >= mod) x-=mod; return *this; }
+	mint& operator-= (const mint& t){x += mod - t.x; if(x >= mod) x-=mod; return *this; }
+	mint& operator*= (const mint& t){x = (unsigned long long)x * t.x % mod; return *this;}
+	mint& operator/= (const mint& t){*this *= t.inv(); return *this;}
+	mint& operator^= (const mint& t){*this = this->pow(t.x); return *this;}
+	mint operator+ (const mint& t){return mint(*this) += t;}
+	mint operator- (const mint& t){return mint(*this) -= t;}
+	mint operator* (const mint& t){return mint(*this) *= t;}
+	mint operator/ (const mint& t){return mint(*this) /= t;}
+	mint operator^ (const mint& t){return mint(*this) ^= t;}
+	bool operator== (const mint& t){return x == t.x;}
+	bool operator!= (const mint& t){return x != t.x;}
+	bool operator< (const mint& t){return x < t.x;} 
+	bool operator<= (const mint& t){return x <= t.x;}
+	bool operator> (const mint& t){return x > t.x;}
+	bool operator>= (const mint& t){return x >= t.x;}
+	friend istream& operator>>(istream& is, mint& t){return is >> t.x;}
+	friend ostream& operator<<(ostream& os, const mint& t){return os << t.x;}
+	friend mint operator+ (int y, const mint& t){return mint(y)+t;}
+	friend mint operator- (int y, const mint& t){return mint(y)-t;}
+	friend mint operator* (int y, const mint& t){return mint(y)*t;}
+	friend mint operator/ (int y, const mint& t){return mint(y)/t;}
+};
+
+const int mod = 1e9+7;
+using Mint = mint<mod>;
+ 
+template<int mod = mod> class Factorials{
+	vector<Mint> v;
+public:
+	void init(int n)
+	{
+		v.resize(n+1);
+		v[0] = 1;
+		for(int i=1;i<=n;i++) v[i] = v[i-1] * i;
+	}
+	
+	Mint operator()(int x){
+		assert(x >= 0);
+		if(v.size() > x) return v[x];
+		Mint res = 1;
+		for(int i=1;i<=x;i++) res*=i;
+		return res; 
+	}
+}; Factorials Fac;
+ 
+template<int mod = mod> class Combinatorics{
+	vector<vector<Mint>> v;
+public:
+	void init(int n)
+	{
+		v.resize(n+1);
+		for(int i=0;i<=n;i++)
+		{
+			v[i].resize(n+1);
+			v[i][0] = v[i][i] = 1;
+			for(int j=1;j<i;j++)
+				v[i][j] = v[i-1][j-1] + v[i-1][j];
+		}
+	}
+	
+	Mint operator()(int x, int y)
+	{
+		assert(x >= 0 && y >= 0);
+		if(y > x) return 0;
+		if(v.size() > x) return v[x][y];
+		Mint res = 1;
+		for(int i=x-y+1; i<=x; i++) res*=i;
+		for(int i=2; i<=y; i++) res*=Mint(i).inv();
+		return res;
+	}
+};Combinatorics C;
