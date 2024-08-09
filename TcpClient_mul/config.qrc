@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>client.config</file>
+        <file>source/online.jpg</file>
+        <file>source/off.jpg</file>
+        <file>source/file.jpg</file>
+        <file>source/folder.jpg</file>
+        <file>source/background.jpg</file>
+    </qresource>
+    <qresource prefix="/new/prefix1"/>
+</RCC>
